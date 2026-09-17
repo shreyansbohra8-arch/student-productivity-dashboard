@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasks · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="page-header">
+        <div><h1>Tasks</h1><p>Plan, track, and complete your academic tasks.</p></div>
+        <button class="btn btn-primary" id="add-task-btn">+ New Task</button>
+      </div>
+
+      <div class="filter-bar">
+        <select id="filter-status">
+          <option value="">All statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <select id="filter-priority">
+          <option value="">All priorities</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Urgent">Urgent</option>
+        </select>
+        <select id="filter-sort">
+          <option value="deadline">Sort: Deadline</option>
+          <option value="priority">Sort: Priority</option>
+          <option value="createdAt">Sort: Newest</option>
+          <option value="title">Sort: Title</option>
+        </select>
+      </div>
+
+      <div id="tasks-list"></div>
+      <div class="pagination" id="tasks-pagination"></div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="task-modal">
+    <div class="modal">
+      <div class="modal-header"><h3>New Task</h3><button class="modal-close" id="task-modal-close">&times;</button></div>
+      <form id="task-form">
+        <div class="modal-body">
+          <div class="form-group"><label>Title</label><input class="form-control" id="task-title" required placeholder="e.g. Finish DBMS assignment"></div>
+          <div class="form-group"><label>Description</label><textarea class="form-control" id="task-description" placeholder="Optional details..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Deadline</label><input class="form-control" type="date" id="task-deadline" required></div>
+            <div class="form-group"><label>Priority</label>
+              <select class="form-control" id="task-priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Subject</label><select class="form-control" id="task-subject"></select></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="task-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="task-detail-modal">
+    <div class="modal">
+      <div class="modal-header"><h3 id="task-detail-title">Task</h3><button class="modal-close" onclick="closeModal('task-detail-modal')">&times;</button></div>
+      <div class="modal-body" id="task-detail-body"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/subjects.js"></script>
+  <script src="assets/js/tasks.js"></script>
+  <script>initTasksPage();</script>
+</body>
+</html>

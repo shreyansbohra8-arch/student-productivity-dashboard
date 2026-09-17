@@ -1,0 +1,19 @@
+/* Extra dashboard-specific styling that layers on top of style.css */
+.welcome-banner {
+  background: linear-gradient(120deg, var(--navy-900), var(--navy-800));
+  color: #fff; border-radius: var(--radius); padding: 24px 28px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  margin-bottom: 24px;
+}
+.welcome-banner h2 { font-size: 1.25rem; font-weight: 700; }
+.welcome-banner p { color: #cbd5e1; font-size: 0.85rem; margin-top: 4px; }
+.welcome-actions { display: flex; gap: 10px; }
+
+.chart-card { min-height: 260px; }
+.chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; font-size: 0.78rem; }
+.chart-legend .legend-item { display: flex; align-items: center; gap: 6px; }
+.chart-legend .swatch { width: 10px; height: 10px; border-radius: 3px; }
+
+.mini-list { display: flex; flex-direction: column; gap: 10px; }
+.mini-list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.mini-list-row:last-child { border-bottom: none; }

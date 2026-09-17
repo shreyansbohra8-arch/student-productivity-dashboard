@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="page-header">
+        <div><h1>Attendance</h1><p id="threshold-note">Track attendance across your subjects.</p></div>
+        <a href="subjects.html" class="btn btn-secondary">Manage Subjects</a>
+      </div>
+
+      <div id="attendance-list"></div>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/attendance.js"></script>
+  <script>initAttendancePage();</script>
+</body>
+</html>

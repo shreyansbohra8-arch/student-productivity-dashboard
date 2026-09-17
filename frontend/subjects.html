@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subjects · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="page-header">
+        <div><h1>Subjects</h1><p>Organize tasks, attendance, and study time by subject.</p></div>
+        <button class="btn btn-primary" id="add-subject-btn">+ Add Subject</button>
+      </div>
+
+      <div id="subjects-list"></div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="subject-modal">
+    <div class="modal">
+      <div class="modal-header"><h3>Add Subject</h3><button class="modal-close" id="subject-modal-close">&times;</button></div>
+      <form id="subject-form">
+        <div class="modal-body">
+          <div class="form-group"><label>Subject name</label><input class="form-control" id="subject-name" required placeholder="e.g. Database Management Systems"></div>
+          <div class="form-group"><label>Code (optional)</label><input class="form-control" id="subject-code" placeholder="e.g. CSE301"></div>
+          <div class="form-group"><label>Color</label><input type="color" id="subject-color" value="#6366f1" style="width:60px; height:36px; padding:2px; border:1px solid var(--border); border-radius:8px;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="subject-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/subjects.js"></script>
+  <script>initSubjectsPage();</script>
+</body>
+</html>

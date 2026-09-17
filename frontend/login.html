@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="brand"><span class="logo-dot"></span> Productivity Hub</div>
+      <h2>Welcome back. Log in to continue.</h2>
+
+      <div class="demo-hint">
+        Demo credentials: <strong>demo@student.com</strong> / <strong>Demo@1234</strong>
+        &nbsp;<button type="button" id="fill-demo" style="background:none;border:none;color:#4338ca;font-weight:700;cursor:pointer;text-decoration:underline;">Autofill</button>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-email">Email address</label>
+          <input class="form-control" type="email" id="login-email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div style="display:flex; gap:8px;">
+            <input class="form-control" type="password" id="login-password" required placeholder="••••••••">
+            <button type="button" id="login-toggle-pw" class="btn btn-secondary btn-sm">Show</button>
+          </div>
+        </div>
+        <div class="form-error" id="login-error"></div>
+        <button type="submit" class="btn btn-primary" id="login-submit" style="width:100%; margin-top:6px;">Log In</button>
+      </form>
+      <div class="auth-footer">Don't have an account? <a href="register.html">Sign up</a></div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>initLoginPage();</script>
+</body>
+</html>

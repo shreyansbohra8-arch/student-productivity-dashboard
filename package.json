@@ -1,0 +1,28 @@
+{
+  "name": "student-productivity-dashboard",
+  "version": "1.0.0",
+  "description": "A database-centric academic productivity management system using MongoDB",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "seed": "node backend/seed/seedData.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-validator": "^7.1.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

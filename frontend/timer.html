@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Timer · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="page-header">
+        <div><h1>Study Timer</h1><p>Stay focused with the Pomodoro technique.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="timer-wrap">
+          <div class="form-group" style="width:260px;">
+            <label>Studying subject</label>
+            <select class="form-control" id="timer-subject"></select>
+          </div>
+
+          <div class="timer-modes">
+            <button class="mode-btn active" data-mode="Focus">Focus</button>
+            <button class="mode-btn" data-mode="Short Break">Short Break</button>
+            <button class="mode-btn" data-mode="Long Break">Long Break</button>
+          </div>
+
+          <div class="timer-circle">
+            <svg id="timer-svg" width="260" height="260" viewBox="0 0 260 260"></svg>
+            <div class="timer-display">
+              <div class="time" id="timer-time">25:00</div>
+              <div class="mode-label" id="timer-mode-label">Focus</div>
+            </div>
+          </div>
+
+          <div class="timer-controls">
+            <button class="btn btn-primary" id="timer-start">Start</button>
+            <button class="btn btn-secondary" id="timer-pause" disabled>Pause</button>
+            <button class="btn btn-secondary" id="timer-reset">Reset</button>
+          </div>
+
+          <div class="timer-stats">
+            <div>
+              <div class="stat-value" id="session-count">0</div>
+              <div class="stat-label">Sessions Today</div>
+            </div>
+            <div>
+              <div class="stat-value" id="total-study-hours">0h</div>
+              <div class="stat-label">Total Study Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/subjects.js"></script>
+  <script src="assets/js/timer.js"></script>
+  <script>initTimerPage();</script>
+</body>
+</html>

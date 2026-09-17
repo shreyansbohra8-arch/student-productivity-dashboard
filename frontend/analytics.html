@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="page-header">
+        <div><h1>Analytics</h1><p>All figures are computed via MongoDB aggregation pipelines.</p></div>
+      </div>
+
+      <div id="analytics-content"></div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/analytics.js"></script>
+  <script>initAnalyticsPage();</script>
+</body>
+</html>

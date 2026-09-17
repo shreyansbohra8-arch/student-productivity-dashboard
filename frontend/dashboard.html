@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Student Productivity Dashboard</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div id="mobile-topbar-root"></div>
+
+      <div class="welcome-banner">
+        <div>
+          <h2>Welcome back, <span id="welcome-name">Student</span> 👋</h2>
+          <p id="current-date"></p>
+        </div>
+        <div class="welcome-actions">
+          <a href="tasks.html" class="btn btn-secondary" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.2);">+ New Task</a>
+          <a href="timer.html" class="btn btn-primary">Start Studying</a>
+        </div>
+      </div>
+
+      <div id="dashboard-content"></div>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script>initDashboardPage();</script>
+</body>
+</html>
