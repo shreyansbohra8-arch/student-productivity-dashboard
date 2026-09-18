@@ -10,6 +10,11 @@ async function getDashboardAnalytics(req, res, next) {
   try {
     const userId = new mongoose.Types.ObjectId(req.userId);
     const now = new Date();
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
 
     // ---- Task completion aggregation ----
     const taskAgg = await Task.aggregate([
@@ -78,6 +83,32 @@ async function getDashboardAnalytics(req, res, next) {
     ]);
     const studyStats = studyTotals[0] || { totalMinutes: 0, totalSessions: 0 };
     const totalHours = Math.round(((studyStats.totalMinutes || 0) / 60) * 100) / 100;
+    const dailyStudyAgg = await StudySession.aggregate([
+      {
+        $match: {
+          userId,
+          mode: 'Focus',
+          completedAt: { $gte: startOfDay, $lte: endOfDay }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          studiedMinutes: { $sum: '$durationMinutes' }
+        }
+      }
+    ]);
+
+    const dailyStudiedMinutes = dailyStudyAgg[0]?.studiedMinutes || 0;
+    const dailyGoalMinutes = req.user.dailyStudyGoalMinutes || 180;
+    const dailyGoalPercentage = Math.min(
+      Math.round((dailyStudiedMinutes / dailyGoalMinutes) * 100),
+      100
+    );
+    const dailyRemainingMinutes = Math.max(
+      dailyGoalMinutes - dailyStudiedMinutes,
+      0
+    );
 
     const mostProductiveSubject = studyBySubject.length > 0 ? studyBySubject[0] : null;
 
@@ -299,7 +330,13 @@ async function getDashboardAnalytics(req, res, next) {
           bySubject: studyBySubject,
           mostProductiveSubject,
           mostProductiveDay,
-          trend: studyTrend
+          trend: studyTrend,
+          dailyGoal: {
+            goalMinutes: dailyGoalMinutes,
+            studiedMinutes: dailyStudiedMinutes,
+            percentage: dailyGoalPercentage,
+            remainingMinutes: dailyRemainingMinutes
+          }
         },
         attendance: {
           overallPercentage,

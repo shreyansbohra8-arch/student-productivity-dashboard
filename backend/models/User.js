@@ -28,6 +28,12 @@ const UserSchema = new mongoose.Schema(
       default: 75,
       min: 0,
       max: 100
+    },
+    dailyStudyGoalMinutes: {
+      type: Number,
+      default: 180,
+      min: 30,
+      max: 1440
     }
   },
   { timestamps: true }

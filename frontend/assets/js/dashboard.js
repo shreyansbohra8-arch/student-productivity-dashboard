@@ -34,6 +34,39 @@ function renderDashboard(a, recentTasks) {
         <div class="stat-sub">${a.streak.todayProductive ? 'Active today - keep it going!' : a.streak.current > 0 ? 'Log a session or task today to keep it alive.' : 'Log a session or complete a task to start one.'}</div>
       </div>
       <div class="card stat-card">
+        <div class="stat-label">Daily Study Goal</div>
+        <div class="stat-value">${Math.floor(a.study.dailyGoal.studiedMinutes / 60)}h ${a.study.dailyGoal.studiedMinutes % 60}m</div>
+        <div class="stat-sub">
+          ${a.study.dailyGoal.percentage}% of ${Math.floor(a.study.dailyGoal.goalMinutes / 60)}h goal ·
+          ${a.study.dailyGoal.remainingMinutes > 0
+            ? `${Math.floor(a.study.dailyGoal.remainingMinutes / 60)}h ${a.study.dailyGoal.remainingMinutes % 60}m remaining`
+            : 'Goal completed! 🎉'}
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+          <label for="daily-goal-input" style="font-size:0.8rem;">Set goal:</label>
+          <input
+            type="number"
+            id="daily-goal-input"
+            min="0.5"
+            max="24"
+            step="0.5"
+            value="${a.study.dailyGoal.goalMinutes / 60}"
+            style="width:70px; padding:6px 8px; border:1px solid #d1d5db; border-radius:6px;"
+          >
+          <span style="font-size:0.8rem;">hours</span>
+          <button
+            type="button"
+            id="save-daily-goal"
+            class="btn btn-primary btn-sm"
+          >
+            Save
+          </button>
+        </div>
+
+        <div id="daily-goal-message" style="font-size:0.75rem; margin-top:6px;"></div>
+      </div>
+      <div class="card stat-card">
         <div class="stat-label">Tasks Completed</div>
         <div class="stat-value">${a.tasks.completedTasks}/${a.tasks.totalTasks}</div>
         <div class="stat-sub">${a.tasks.completionPercentage}% completion rate</div>
@@ -77,6 +110,48 @@ function renderDashboard(a, recentTasks) {
       </div>
     </div>
   `;
+  const saveGoalBtn = document.getElementById('save-daily-goal');
+  const goalInput = document.getElementById('daily-goal-input');
+  const goalMessage = document.getElementById('daily-goal-message');
+
+  saveGoalBtn?.addEventListener('click', async () => {
+    const hours = Number(goalInput.value);
+
+    if (!Number.isFinite(hours) || hours < 0.5 || hours > 24) {
+      goalMessage.textContent = 'Please enter a goal between 0.5 and 24 hours.';
+      return;
+    }
+
+    const minutes = Math.round(hours * 60);
+
+    saveGoalBtn.disabled = true;
+    saveGoalBtn.textContent = 'Saving...';
+    goalMessage.textContent = '';
+
+    try {
+      const res = await API.updateSettings({
+        dailyStudyGoalMinutes: minutes
+      });
+
+      setStoredUser(res.data.user);
+
+      goalMessage.textContent = 'Daily study goal saved!';
+      saveGoalBtn.textContent = 'Saved';
+
+      setTimeout(() => {
+        saveGoalBtn.textContent = 'Save';
+      }, 1500);
+
+      // Refresh the dashboard so the progress display uses the new goal.
+      const analyticsRes = await API.getDashboardAnalytics();
+      renderDashboard(analyticsRes.data, recentTasks);
+    } catch (err) {
+      goalMessage.textContent = err.message;
+      saveGoalBtn.textContent = 'Save';
+    } finally {
+      saveGoalBtn.disabled = false;
+    }
+  });
 }
 
 function renderMiniTaskList(tasks) {

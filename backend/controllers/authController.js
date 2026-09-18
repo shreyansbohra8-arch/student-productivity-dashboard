@@ -14,6 +14,7 @@ function sanitizeUser(user) {
     name: user.name,
     email: user.email,
     attendanceThreshold: user.attendanceThreshold,
+    dailyStudyGoalMinutes: user.dailyStudyGoalMinutes,
     createdAt: user.createdAt
   };
 }
@@ -84,9 +85,26 @@ async function getMe(req, res, next) {
 // PATCH /api/auth/settings
 async function updateSettings(req, res, next) {
   try {
-    const { attendanceThreshold } = req.body;
+    const { attendanceThreshold, dailyStudyGoalMinutes } = req.body;
+
     if (attendanceThreshold !== undefined) {
       req.user.attendanceThreshold = attendanceThreshold;
+    }
+
+    if (dailyStudyGoalMinutes !== undefined) {
+      const goal = Number(dailyStudyGoalMinutes);
+
+      if (!Number.isInteger(goal) || goal < 30 || goal > 1440) {
+        return res.status(400).json({
+          success: false,
+          message: 'Daily study goal must be between 30 and 1440 minutes'
+        });
+      }
+
+      req.user.dailyStudyGoalMinutes = goal;
+    }
+
+    if (attendanceThreshold !== undefined || dailyStudyGoalMinutes !== undefined) {
       await req.user.save();
     }
     res.json({ success: true, data: { user: sanitizeUser(req.user) } });
