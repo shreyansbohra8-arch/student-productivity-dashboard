@@ -37,6 +37,11 @@ function renderAttendance(records, threshold, subjects) {
       </div>
       <div class="progress-track"><div class="progress-fill ${r.state}" style="width:${r.percentage}%"></div></div>
       <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">${r.presentClasses} present / ${r.totalClasses} total classes</p>
+      ${r.canMiss !== null && r.canMiss !== undefined
+        ? r.needToAttend > 0
+          ? `<div class="attendance-calc calc-warning"><span><strong>⚠ Need to attend next ${r.needToAttend} class${r.needToAttend === 1 ? '' : 'es'}</strong> to reach ${threshold}%</span></div>`
+          : `<div class="attendance-calc calc-safe"><span>✔ Can miss <strong>${r.canMiss}</strong> class${r.canMiss === 1 ? '' : 'es'}</span><span class="calc-keep">Need to attend next: ${r.needToAttend}</span></div>`
+        : ''}
       ${r.state === 'shortage' ? `<p style="font-size:0.78rem; color:var(--danger); font-weight:600; margin-top:4px;">⚠ Attendance shortage</p>` : ''}
       ${r.state === 'warning' ? `<p style="font-size:0.78rem; color:var(--warning); font-weight:600; margin-top:4px;">⚠ Getting close to the limit</p>` : ''}
       <div class="attendance-actions">

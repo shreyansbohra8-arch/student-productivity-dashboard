@@ -7,11 +7,35 @@ async function listAttendance(req, res, next) {
     const records = await Attendance.find({ userId: req.userId }).populate('subjectId', 'name code color');
     const threshold = req.user.attendanceThreshold || 75;
     const withStatus = records.map((r) => {
-      const pct = r.totalClasses ? Math.round((r.presentClasses / r.totalClasses) * 10000) / 100 : 0;
+      const total = r.totalClasses;
+      const present = r.presentClasses;
+      const pct = total ? Math.round((present / total) * 10000) / 100 : 0;
+
+      // "Safe Classes" calculator.
+      // Above the threshold: the max classes that can be skipped (raising the
+      // total without adding to present) while staying at/above it.
+      //   canMiss = largest x with present/(total+x) >= threshold/100
+      // Below the threshold: the consecutive classes that MUST be attended
+      // (raising both total and present) to climb back to the threshold.
+      //   needToAttend = smallest y with (present+y)/(total+y) >= threshold/100
+      let canMiss = null;
+      let needToAttend = null;
+      if (total > 0) {
+        if (pct >= threshold) {
+          canMiss = Math.max(0, Math.floor((present * 100) / threshold - total));
+          needToAttend = 0;
+        } else {
+          needToAttend = Math.max(0, Math.ceil((threshold * total - present * 100) / (100 - threshold)));
+          canMiss = 0;
+        }
+      }
+
       return {
         ...r.toObject(),
         percentage: pct,
-        state: pct >= threshold ? 'safe' : pct >= threshold - 10 ? 'warning' : 'shortage'
+        state: pct >= threshold ? 'safe' : pct >= threshold - 10 ? 'warning' : 'shortage',
+        canMiss,
+        needToAttend
       };
     });
     res.json({ success: true, data: withStatus, threshold });

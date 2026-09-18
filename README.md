@@ -20,6 +20,7 @@ Student Productivity Dashboard centralizes six areas of academic life into one a
 - Embedded subtasks with `$push` / `$pull` / `$set` / `$elemMatch` array operations
 - MongoDB `$text` full-text search over notes
 - Upsert-based attendance recording
+- "Safe Classes" calculator — for each subject, shows how many classes you can miss (when above the threshold) or how many you must attend next (when below it)
 - Aggregation-pipeline-driven analytics (task completion, study time by subject, attendance percentage, most productive day, 14-day study trend)
 - Productivity streak — consecutive-day streak from focus sessions + completed tasks, computed via `$unionWith` / `$setWindowFields`, shown on the dashboard and analytics page
 - Multi-document ACID transaction for cascading account deletion
