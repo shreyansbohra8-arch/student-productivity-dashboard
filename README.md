@@ -21,6 +21,7 @@ Student Productivity Dashboard centralizes six areas of academic life into one a
 - MongoDB `$text` full-text search over notes
 - Upsert-based attendance recording
 - Aggregation-pipeline-driven analytics (task completion, study time by subject, attendance percentage, most productive day, 14-day study trend)
+- Productivity streak — consecutive-day streak from focus sessions + completed tasks, computed via `$unionWith` / `$setWindowFields`, shown on the dashboard and analytics page
 - Multi-document ACID transaction for cascading account deletion
 - Paginated, projected task and note listings
 - Responsive, modern dashboard UI with loading/empty/error states, toasts, and modals
@@ -101,7 +102,7 @@ All 13 required techniques are implemented in real, running query code:
 1. **CRUD** — every module (subjects, tasks, attendance, study sessions, notes, exams)
 2. **Embedded documents** — `Task.subtasks[]` (`backend/models/Task.js`)
 3. **ObjectId references** — `userId` / `subjectId` across every collection
-4. **Aggregation pipelines** — `backend/controllers/analyticsController.js` (7 separate pipelines: task stats, study-by-subject, most-productive-day, 14-day trend, attendance-by-subject, overall attendance)
+4. **Aggregation pipelines** — `backend/controllers/analyticsController.js` (8 separate pipelines: task stats, study-by-subject, most-productive-day, 14-day trend, productive-day streak via `$unionWith` + `$setWindowFields`, attendance-by-subject, overall attendance)
 5. **Single-field indexes** — `Task.userId`, `StudySession.subjectId`, `Exam.examDate`, etc.
 6. **Compound index** — `{ userId: 1, status: 1, deadline: 1 }` on `Task` for efficient pending-task retrieval
 7. **Text index** — `{ title: 'text', content: 'text' }` on `Note`, queried with `$text`/`$search`

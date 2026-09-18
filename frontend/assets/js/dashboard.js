@@ -28,6 +28,11 @@ function renderDashboard(a, recentTasks) {
 
   content.innerHTML = `
     <div class="stat-grid">
+      <div class="card stat-card streak-card">
+        <div class="stat-label">Productivity Streak</div>
+        <div class="stat-value">${a.streak.current}<span class="streak-unit"> days</span></div>
+        <div class="stat-sub">${a.streak.todayProductive ? 'Active today - keep it going!' : a.streak.current > 0 ? 'Log a session or task today to keep it alive.' : 'Log a session or complete a task to start one.'}</div>
+      </div>
       <div class="card stat-card">
         <div class="stat-label">Tasks Completed</div>
         <div class="stat-value">${a.tasks.completedTasks}/${a.tasks.totalTasks}</div>

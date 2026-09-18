@@ -141,6 +141,30 @@ input, select, textarea { font-family: inherit; }
 .stat-card .stat-value { font-size: 1.7rem; font-weight: 700; color: var(--navy-900); }
 .stat-card .stat-sub { font-size: 0.78rem; color: var(--text-muted); }
 .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.streak-card {
+  background: linear-gradient(135deg, #f97316, #ef4444);
+  border-color: transparent;
+  color: #fff;
+}
+.streak-card .stat-label,
+.streak-card .stat-sub { color: rgba(255, 255, 255, 0.85); }
+.streak-card .stat-value { color: #fff; }
+.streak-unit { font-size: 1rem; font-weight: 600; opacity: 0.9; }
+.streak-card-wide { grid-column: span 2; }
+@media (max-width: 640px) { .streak-card-wide { grid-column: span 1; } }
+.streak-badge {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
 
 .grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }

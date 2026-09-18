@@ -20,6 +20,14 @@ function renderAnalytics(a) {
   const container = document.getElementById('analytics-content');
   container.innerHTML = `
     <div class="stat-grid">
+      <div class="card stat-card streak-card streak-card-wide">
+        <div class="stat-label">Productivity Streak</div>
+        <div class="stat-value">
+          ${a.streak.current}<span class="streak-unit"> day${a.streak.current === 1 ? '' : 's'}</span>
+          <span class="streak-badge">${a.streak.todayProductive ? 'Active today' : a.streak.current > 0 ? 'Keep it alive' : 'No streak yet'}</span>
+        </div>
+        <div class="stat-sub">Longest streak ${a.streak.longest} days &middot; ${a.streak.activeDays} active day${a.streak.activeDays === 1 ? '' : 's'} logged</div>
+      </div>
       <div class="card stat-card"><div class="stat-label">Task Completion</div><div class="stat-value">${a.tasks.completionPercentage}%</div><div class="stat-sub">${a.tasks.completedTasks}/${a.tasks.totalTasks} tasks</div></div>
       <div class="card stat-card"><div class="stat-label">Study Hours</div><div class="stat-value">${a.study.totalHours}h</div><div class="stat-sub">${a.study.totalSessions} sessions</div></div>
       <div class="card stat-card"><div class="stat-label">Overall Attendance</div><div class="stat-value">${a.attendance.overallPercentage}%</div><div class="stat-sub">${a.attendance.belowThreshold.length} below threshold</div></div>

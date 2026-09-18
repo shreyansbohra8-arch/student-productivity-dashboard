@@ -91,6 +91,7 @@ async function seed() {
       deadline: daysFromNow(-3),
       priority: 'High',
       status: 'Completed',
+      completedAt: daysFromNow(-3),
       subtasks: [
         { title: 'Preprocess dataset', completed: true },
         { title: 'Train model', completed: true }

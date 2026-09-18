@@ -61,6 +61,11 @@ const TaskSchema = new mongoose.Schema(
       },
       default: 'Pending'
     },
+    // When the task was marked Completed (used for productivity streaks)
+    completedAt: {
+      type: Date,
+      default: null
+    },
     // Embedded documents array
     subtasks: [SubtaskSchema]
   },

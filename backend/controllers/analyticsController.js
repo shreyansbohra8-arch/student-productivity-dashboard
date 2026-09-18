@@ -110,6 +110,111 @@ async function getDashboardAnalytics(req, res, next) {
       { $project: { _id: 0, date: '$_id', totalMinutes: 1 } }
     ]);
 
+    // ---- Productivity streak ----
+    // A day counts as productive when the user logged a Focus session (completedAt)
+    // OR completed a task (Task.completedAt is set when a task transitions to
+    // 'Completed'). The two sources are merged with $unionWith, deduplicated per
+    // calendar day, then consecutive days are grouped into streaks via
+    // $setWindowFields gap detection -- all computed inside MongoDB.
+    const streakAgg = await StudySession.aggregate([
+      { $match: { userId, mode: 'Focus' } },
+      { $project: { date: { $dateToString: { format: '%Y-%m-%d', date: '$completedAt' } } } },
+      {
+        $unionWith: {
+          coll: 'tasks',
+          pipeline: [
+            { $match: { userId, status: 'Completed', completedAt: { $ne: null } } },
+            {
+              $project: {
+                date: { $dateToString: { format: '%Y-%m-%d', date: '$completedAt' } }
+              }
+            }
+          ]
+        }
+      },
+      { $group: { _id: '$date' } },
+      { $project: { _id: 0, date: '$_id' } },
+      { $sort: { date: 1 } },
+      // Tag each date with the previous productive day so gaps can be detected
+      {
+        $setWindowFields: {
+          sortBy: { date: 1 },
+          output: {
+            prevDate: { $shift: { output: '$date', by: -1, default: null } }
+          }
+        }
+      },
+      // Assign a streak id: increment whenever the previous day is missing
+      {
+        $setWindowFields: {
+          sortBy: { date: 1 },
+          output: {
+            streakId: {
+              $sum: {
+                $cond: [
+                  {
+                    $and: [
+                      { $ne: ['$prevDate', null] },
+                      {
+                        $eq: [
+                          {
+                            $subtract: [
+                              { $toLong: { $toDate: '$date' } },
+                              { $toLong: { $toDate: '$prevDate' } }
+                            ]
+                          },
+                          86400000
+                        ]
+                      }
+                    ]
+                  },
+                  0,
+                  1
+                ]
+              },
+              window: { documents: ['unbounded', 'current'] }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$streakId',
+          days: { $sum: 1 },
+          startDate: { $min: '$date' },
+          endDate: { $max: '$date' }
+        }
+      },
+      { $sort: { endDate: -1 } },
+      {
+        $group: {
+          _id: null,
+          longestStreak: { $max: '$days' },
+          activeDays: { $sum: '$days' },
+          streaks: { $push: { days: '$days', startDate: '$startDate', endDate: '$endDate' } }
+        }
+      },
+      { $project: { _id: 0, longestStreak: 1, activeDays: 1, streaks: 1 } }
+    ]);
+
+    const streakSummary = streakAgg[0] || { longestStreak: 0, activeDays: 0, streaks: [] };
+    const streaks = streakSummary.streaks || [];
+
+    // The current streak is the most recent one: it ends today (still productive
+    // today) or yesterday (streak is still alive until today runs out).
+    const todayStr = now.toISOString().slice(0, 10);
+    const yesterdayStr = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    let currentStreak = 0;
+    let todayProductive = false;
+    for (const s of streaks) {
+      if (s.endDate === todayStr) {
+        todayProductive = true;
+        currentStreak = Math.max(currentStreak, s.days);
+      } else if (s.endDate === yesterdayStr) {
+        currentStreak = Math.max(currentStreak, s.days);
+      }
+    }
+
     // ---- Attendance aggregation ----
     // The per-user threshold is known before the pipeline runs, so the
     // below-threshold split is computed by MongoDB itself (via $facet)
@@ -206,6 +311,12 @@ async function getDashboardAnalytics(req, res, next) {
           upcoming: upcomingExams,
           nearestExam,
           upcomingCount
+        },
+        streak: {
+          current: currentStreak,
+          longest: streakSummary.longestStreak || 0,
+          activeDays: streakSummary.activeDays || 0,
+          todayProductive
         }
       }
     });

@@ -88,7 +88,8 @@ async function createTask(req, res, next) {
       priority,
       status,
       subjectId: subjectCheck.subjectId,
-      subtasks: Array.isArray(subtasks) ? subtasks : []
+      subtasks: Array.isArray(subtasks) ? subtasks : [],
+      completedAt: status === 'Completed' ? new Date() : null
     });
     res.status(201).json({ success: true, data: task });
   } catch (err) {
@@ -113,6 +114,11 @@ async function updateTask(req, res, next) {
         return res.status(subjectCheck.status).json({ success: false, message: subjectCheck.message });
       }
       update.subjectId = subjectCheck.subjectId;
+    }
+
+    // Track when the task was completed so productivity streaks can use it
+    if (update.status !== undefined) {
+      update.completedAt = update.status === 'Completed' ? new Date() : null;
     }
 
     // $set demonstrates targeted field update
